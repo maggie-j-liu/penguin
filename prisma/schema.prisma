@@ -75,6 +75,7 @@ model Participant {
   eventId      String
   checkedIn    Boolean @default(false)
   waiverSigned Boolean @default(false)
+  waiverId     String  @unique @default(cuid())
 
   @@unique([email, eventId])
 }
