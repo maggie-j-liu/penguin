@@ -53,7 +53,7 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
         <p className="text-center text-2xl font-semibold text-gray-400">
           {formatDate(event.date)}
         </p>
-        <section>
+        <section className="mt-4">
           <h2 className="text-2xl font-medium">
             {numRegistrations} Registration{numRegistrations === 1 ? "" : "s"} /{" "}
             {checkedIn} Checked In
@@ -88,7 +88,7 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
                   </td>
                   <td>{participant.age}</td>
                   <td>{participant.email}</td>
-                  <td>{participant.waiverSigned ? "Yes" : "No"}</td>
+                  <td>{participant.waiverSigned ? "✅ Yes" : "❌ No"}</td>
                   <td>
                     {participant.checkedIn ? "✅ " : "❌ "}
                     <button
