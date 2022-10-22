@@ -64,7 +64,7 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
             <div>
               <a href={`/event/${event.id}/register`}>
                 <p className="rounded-md border-4 border-black bg-black px-4 py-2 text-sm font-black text-white transition ease-in-out hover:bg-white hover:text-black">
-                  Registration Form Link
+                  Registration Form
                 </p>
               </a>
             </div>
