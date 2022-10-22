@@ -1,6 +1,7 @@
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
+import prisma from "../lib/prisma";
 
 const Dashboard = () => {
   return (
@@ -21,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     authOptions
   );
 
-  if (!session) {
+  if (!session?.user) {
     return {
       redirect: {
         destination: "/",
@@ -30,9 +31,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
+  const userEvents = await prisma.event.findMany({
+    where: {
+      userId: session.user.id,
+    },
+  });
+
   return {
     props: {
       session,
+      events: userEvents,
     },
   };
 };
