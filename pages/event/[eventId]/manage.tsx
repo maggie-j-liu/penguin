@@ -11,6 +11,8 @@ type EventWithParticipants = Event & { participants: ParticipantType[] };
 const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
   const numRegistrations = event.participants.length;
   const [participants, setParticipants] = useState(event.participants);
+  const [search, setSearch] = useState("");
+  const checkedIn = participants.filter((p) => p.checkedIn).length;
   const changeCheckIn = async (id: string, checkedIn: boolean) => {
     console.log("changeCheckIn", participants);
     const newParticipants = participants.map((participant) => {
@@ -35,6 +37,15 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
       }),
     });
   };
+  const filteredParticipants = participants.filter((p) => {
+    if (search.trim().length === 0) return true;
+    const lowerSearch = search.toLowerCase();
+    const fullName = p.firstName + " " + p.lastName;
+    return (
+      fullName.toLowerCase().includes(lowerSearch) ||
+      p.email.toLowerCase().includes(lowerSearch)
+    );
+  });
   return (
     <PageLayout>
       <div className="mx-auto max-w-5xl text-xl">
@@ -44,11 +55,21 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
         </p>
         <section>
           <h2 className="text-2xl font-medium">
-            {numRegistrations} Registration{numRegistrations === 1 ? "" : "s"}
+            {numRegistrations} Registration{numRegistrations === 1 ? "" : "s"} /{" "}
+            {checkedIn} Checked In
           </h2>
-          <table className="w-full border-collapse border">
+          <input
+            type="text"
+            placeholder="Search for a name or email"
+            className="mt-2 w-full rounded border-2 border-gray-700 px-2 py-1"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+          />
+          <table className="mt-6 w-full border-collapse border">
             <thead>
-              <tr className="[&>*]:border [&>*]:px-2 [&>*]:py-1 [&>*]:text-start">
+              <tr className="[&>*]:border [&>*]:border-gray-400 [&>*]:bg-gray-100 [&>*]:px-2 [&>*]:py-1 [&>*]:text-start">
                 <th>Name</th>
                 <th>Age</th>
                 <th>Email</th>
@@ -57,9 +78,9 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
               </tr>
             </thead>
             <tbody>
-              {participants.map((participant) => (
+              {filteredParticipants.map((participant) => (
                 <tr
-                  className="[&>*]:border [&>*]:px-2 [&>*]:py-1"
+                  className="[&>*]:border [&>*]:border-gray-400 [&>*]:px-2 [&>*]:py-1"
                   key={participant.id}
                 >
                   <td>
@@ -80,7 +101,7 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
                           changeCheckIn(participant.id, true);
                         }
                       }}
-                      className="border-2 border-black bg-black px-2 text-white hover:bg-white hover:text-black"
+                      className="rounded border-2 border-black bg-black px-2 text-white hover:bg-white hover:text-black"
                     >
                       {participant.checkedIn ? "remove" : "check in"}
                     </button>
