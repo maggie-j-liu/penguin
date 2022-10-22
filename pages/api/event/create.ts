@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { unstable_getServerSession } from "next-auth";
 import prisma from "../../../lib/prisma";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,31 +11,25 @@ export default async function handler(
     if (req.method === "POST") {
       // Process a POST request
 
-      if (!req.body.name || !req.body.date || !req.body.email) {
-        res.status(500).send("Insufficient fields sent");
+      if (!req.body.name || !req.body.date) {
+        res.status(400).send("Insufficient fields sent");
         res.end();
         return;
       }
 
-      const { name, date, email } = req.body;
-
-      const user = await prisma.user.findUnique({
-        where: {
-          email,
-        },
-      });
-
-      if (!user) {
-        res.status(500).send("User with given email not found");
-        res.end();
+      const session = await unstable_getServerSession(req, res, authOptions);
+      if (!session) {
+        res.status(401).json({ message: "You must be logged in." });
         return;
       }
+
+      const { name, date } = req.body;
 
       const event = await prisma.event.create({
         data: {
           name: name,
           date: date,
-          userId: user.id,
+          userId: session.user.id,
         },
       });
 

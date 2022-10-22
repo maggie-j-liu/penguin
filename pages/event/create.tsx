@@ -27,7 +27,6 @@ const CreateEventForm = () => {
       }}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(async () => {
-          alert(JSON.stringify(values, null, 2));
           await fetch("/api/event/create", {
             method: "POST",
             headers: {
@@ -37,7 +36,6 @@ const CreateEventForm = () => {
             body: JSON.stringify({
               name: values.name,
               date: new Date(values.date),
-              email: session?.user.email,
             }),
           });
           setSubmitting(false);
