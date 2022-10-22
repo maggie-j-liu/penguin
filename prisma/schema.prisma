@@ -54,3 +54,20 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model Event {
+  id            String    @id @default(uuid())
+  participants Participant[]
+  date DateTime
+  name String
+}
+
+model Participant {
+  id            String    @id @default(cuid())
+  firstName String
+  lastName String
+  email String @unique
+  age Int
+  event Event @relation(fields: [eventId], references: [id])
+  eventId String
+}
