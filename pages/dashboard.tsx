@@ -13,7 +13,7 @@ const Dashboard = ({ events }: { events: EventType[] }) => {
         <h1 className="mx-auto w-fit text-center text-4xl font-bold">
           Dashboard
         </h1>
-        <div className="grid grid-cols-4">
+        <div className="mt-6 grid grid-cols-4 gap-x-6 gap-y-4">
           {events.map((event) => (
             <Event key={event.id} event={event} />
           ))}
