@@ -7,8 +7,10 @@
 //     userId       String
 //   }
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useSession } from "next-auth/react";
 
 const CreateEventForm = () => {
+  const { data: session, status } = useSession();
   return (
     <Formik
       initialValues={{ name: "", date: "" }}
@@ -24,9 +26,20 @@ const CreateEventForm = () => {
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
+        setTimeout(async () => {
           alert(JSON.stringify(values, null, 2));
-
+          await fetch("/api/event/create", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: values.name,
+              date: new Date(values.date),
+              email: session?.user.email,
+            }),
+          });
           setSubmitting(false);
         }, 400);
       }}

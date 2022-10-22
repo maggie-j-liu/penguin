@@ -7,7 +7,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+<<<<<<< Updated upstream
         sans: ["'Space Grotesk'", ...defaultTheme.fontFamily.sans],
+=======
+        sans: ["Playfair Display"],
+>>>>>>> Stashed changes
       },
     },
   },
