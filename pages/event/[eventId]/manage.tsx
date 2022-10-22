@@ -48,34 +48,42 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
     );
   });
   return (
-    <PageLayout>
+    <PageLayout
+      crumbs={[{ text: event.name, link: `/event/${event.id}/manage` }]}
+    >
       <div className="mx-auto max-w-5xl text-xl">
         <h1 className="text-center text-5xl font-bold">{event.name}</h1>
         <p className="text-center text-2xl font-semibold text-gray-400">
           {formatDate(event.date)}
         </p>
 
-        <div className="my-4 space-y-1">
+        <section className="my-4 space-y-1">
+          <div className="flex items-center space-x-1">
+            <h2 className="text-2xl font-medium">Quicklinks</h2>
+            <HiExternalLink size={25} />
+          </div>
           <div className="space-y-2">
             <div>
               <a href={`/event/${event.id}/register`}>
-                <p className="rounded-md border-4 border-black bg-black px-4 py-2 text-sm font-black text-white transition ease-in-out hover:bg-white hover:text-black">
-                  Registration Form
+                <p className="rounded-md border-2 border-black bg-black px-4 py-2 font-black text-white transition ease-in-out hover:bg-white hover:text-black">
+                  Registration Form -- have attendees register here
                 </p>
               </a>
             </div>
 
             <div>
-              <a href={`/event/${event.id}/send/email`}>
-                <p className="rounded-md border-2 border-black bg-black px-4 py-2 text-sm font-black text-white transition ease-in-out hover:bg-white hover:text-black">
-                  Mass Email Sending Tool
+              <a href={`/event/${event.id}/email`}>
+                <p className="rounded-md border-2 border-black bg-black px-4 py-2 font-black text-white transition ease-in-out hover:bg-white hover:text-black">
+                  Send emails to your attendees
                 </p>
               </a>
             </div>
           </div>
-        </div>
+        </section>
 
-        <section className="mt-4">
+        <hr className="my-8 mx-auto w-1/2 border-2 border-dashed border-gray-300" />
+
+        <section className="">
           <h2 className="text-2xl font-medium">
             {numRegistrations} Registration{numRegistrations === 1 ? "" : "s"} /{" "}
             {checkedIn} Checked In
@@ -83,13 +91,13 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
           <input
             type="text"
             placeholder="Search for a name or email"
-            className="mt-2 w-full rounded border-2 border-gray-700 px-2 py-1"
+            className="mt-4 w-full rounded border-2 border-gray-700 px-2 py-1"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
             }}
           />
-          <table className="mt-6 w-full border-collapse border">
+          <table className="mt-2 w-full border-collapse border">
             <thead>
               <tr className="[&>*]:border [&>*]:border-gray-400 [&>*]:bg-gray-100 [&>*]:px-2 [&>*]:py-1 [&>*]:text-start">
                 <th>Name</th>

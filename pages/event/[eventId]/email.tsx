@@ -1,18 +1,24 @@
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { useState } from "react";
-import PageLayout from "../../../../components/PageLayout";
-import { formatDate } from "../../../../lib/formatDate";
-import { authOptions } from "../../../api/auth/[...nextauth]";
-import prisma from "../../../../lib/prisma";
+import PageLayout from "../../../components/PageLayout";
+import { formatDate } from "../../../lib/formatDate";
+import { authOptions } from "../../api/auth/[...nextauth]";
+import prisma from "../../../lib/prisma";
+import { Event } from "@prisma/client";
 
 //TODO: fix type
-const SendEmail = ({ event }: { event: any }) => {
+const SendEmail = ({ event }: { event: Event }) => {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
 
   return (
-    <PageLayout>
+    <PageLayout
+      crumbs={[
+        { text: event.name, link: `/event/${event.id}/manage` },
+        { text: "email", link: `/event/${event.id}/email` },
+      ]}
+    >
       <h1 className="text-center text-5xl font-bold">{event.name}</h1>
       <p className="text-center text-2xl font-semibold text-gray-400">
         {formatDate(event.date)}
@@ -27,7 +33,7 @@ const SendEmail = ({ event }: { event: any }) => {
               setSubject(event.target.value);
             }}
             placeholder="Ex: Welcome!"
-            className="w-full rounded-md border-4 border-black px-4 py-2 font-black"
+            className="w-full rounded-md border-2 border-black px-4 py-2 font-black"
           />
         </div>
 
@@ -38,7 +44,7 @@ const SendEmail = ({ event }: { event: any }) => {
               setBody(event.target.value);
             }}
             placeholder="Ex: Attention! We still have not received your waiver."
-            className="h-full w-full rounded-md border-4 border-black px-4 py-2"
+            className="h-full w-full rounded-md border-2 border-black px-4 py-2"
           />
         </div>
 

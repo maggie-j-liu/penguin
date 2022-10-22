@@ -34,6 +34,7 @@ export default async function handler(
       res.send("Success");
     } else {
       // Handle any other HTTP method
+      res.status(400).send("Method not allowed");
     }
   } catch (err) {
     console.log(err);
