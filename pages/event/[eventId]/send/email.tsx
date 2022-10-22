@@ -1,27 +1,23 @@
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { GetServerSideProps } from "next";
+import { unstable_getServerSession } from "next-auth";
 import { useState } from "react";
 import PageLayout from "../../../../components/PageLayout";
+import { formatDate } from "../../../../lib/formatDate";
+import { authOptions } from "../../../api/auth/[...nextauth]";
+import prisma from "../../../../lib/prisma";
 
-const SendEmail = ({ eventId }: { eventId: string }) => {
+//TODO: fix type
+const SendEmail = ({ event }: { event: any }) => {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
 
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: "Enter your email body here in (Markdown)[https://youtube.com]",
-    editorProps: {
-      attributes: {
-        class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl m-5 focus:outline-none",
-      },
-    },
-  });
-
   return (
     <PageLayout>
-      <div className="space-y-4">
+      <h1 className="text-center text-5xl font-bold">{event.name}</h1>
+      <p className="text-center text-2xl font-semibold text-gray-400">
+        {formatDate(event.date)}
+      </p>
+      <div className="mx-auto max-w-5xl space-y-4">
         <div>
           <p className="font-black">Subject:</p>
           <input
@@ -46,36 +42,66 @@ const SendEmail = ({ eventId }: { eventId: string }) => {
           />
         </div>
 
-        <button
-          onClick={async () => {
-            await fetch("/api/email/send", {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                subject: subject,
-                body: body,
-                eventId: eventId,
-              }),
-            });
-          }}
-          className="bg-black text-white"
-        >
-          Send email
-        </button>
+        <div className="flex justify-center">
+          <button
+            onClick={async () => {
+              await fetch("/api/email/send", {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  subject: subject,
+                  body: body,
+                  eventId: event.id,
+                }),
+              });
+            }}
+            className="w-full max-w-5xl rounded-md border-4 border-black bg-black px-4 py-2 font-black text-white transition ease-in-out hover:bg-white hover:text-black"
+          >
+            Send email
+          </button>
+        </div>
       </div>
     </PageLayout>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { eventId } = context.params as any;
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (!session?.user) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const event = await prisma.event.findUnique({
+    where: {
+      id: context.params!.eventId as string,
+    },
+  });
+
+  if (event?.userId !== session.user.id) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
-      eventId,
+      event,
     },
   };
 };

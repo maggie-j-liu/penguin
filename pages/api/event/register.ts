@@ -36,6 +36,7 @@ export default async function handler(
       // Handle any other HTTP method
     }
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 }
