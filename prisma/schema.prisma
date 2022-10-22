@@ -45,6 +45,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Event         Event[]
 }
 
 model VerificationToken {
@@ -56,21 +57,22 @@ model VerificationToken {
 }
 
 model Event {
-  id            String    @id @default(uuid())
+  id           String        @id @default(uuid())
+  creator      User          @relation(fields: [userId], references: [id])
   participants Participant[]
-  date DateTime
-  name String
+  date         DateTime
+  name         String
+  userId       String
 }
 
 model Participant {
-  id            String    @id @default(cuid())
-  firstName String
-  lastName String
-  email String @unique
-  age Int
-  event Event @relation(fields: [eventId], references: [id])
-  eventId String
-  checkedIn Boolean @default(false)
+  id           String  @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String  @unique
+  age          Int
+  event        Event   @relation(fields: [eventId], references: [id])
+  eventId      String
+  checkedIn    Boolean @default(false)
   waiverSigned Boolean @default(false)
-
 }
