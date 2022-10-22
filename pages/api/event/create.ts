@@ -33,7 +33,7 @@ export default async function handler(
         },
       });
 
-      res.send({ event: event });
+      res.send({ event });
     } else {
       // Handle any other HTTP method
     }

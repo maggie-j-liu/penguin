@@ -7,10 +7,16 @@
 //     userId       String
 //   }
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { GetServerSideProps } from "next";
+import { unstable_getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
+import PageLayout from "../../components/PageLayout";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { useRouter } from "next/router";
 
 const CreateEventForm = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
   return (
     <Formik
       initialValues={{ name: "", date: "" }}
@@ -27,7 +33,7 @@ const CreateEventForm = () => {
       }}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(async () => {
-          await fetch("/api/event/create", {
+          const res = await fetch("/api/event/create", {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -37,7 +43,8 @@ const CreateEventForm = () => {
               name: values.name,
               date: new Date(values.date),
             }),
-          });
+          }).then((res) => res.json());
+          router.push(`/event/${res.event.id}/manage`);
           setSubmitting(false);
         }, 400);
       }}
@@ -46,12 +53,16 @@ const CreateEventForm = () => {
         <Form className="mx-auto flex max-w-xl flex-col space-y-4">
           <div className="w-full space-y-2">
             <div>
-              <Field
-                type="text"
-                name="name"
-                className="w-full rounded-md border-4 border-black px-4 py-2 font-black"
-                placeholder="Event Name"
-              />
+              <label>
+                <span>Event Name</span>
+                <span className="text-red-400">*</span>
+                <Field
+                  type="text"
+                  name="name"
+                  className="w-full rounded-md border-2 border-black px-4 py-2 font-black"
+                  placeholder="Unite Hacks"
+                />
+              </label>
               <ErrorMessage
                 name="name"
                 component="p"
@@ -60,11 +71,15 @@ const CreateEventForm = () => {
             </div>
 
             <div>
-              <Field
-                type="date"
-                name="date"
-                className="w-full rounded-md border-4 border-black px-4 py-2 font-black"
-              />
+              <label>
+                <span>Date</span>
+                <span className="text-red-400">*</span>
+                <Field
+                  type="date"
+                  name="date"
+                  className="w-full rounded-md border-2 border-black px-4 py-2 font-black"
+                />
+              </label>
               <ErrorMessage
                 name="date"
                 component="div"
@@ -87,11 +102,34 @@ const CreateEventForm = () => {
 
 const CreateEvent = () => {
   return (
-    <div className="space-y-4 p-8">
+    <PageLayout>
       <h1 className="text-center text-4xl font-black">Create an event.</h1>
       <CreateEventForm />
-    </div>
+    </PageLayout>
   );
 };
 
 export default CreateEvent;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (!session?.user) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+};
