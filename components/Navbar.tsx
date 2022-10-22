@@ -12,7 +12,7 @@ const Navbar = ({
     <nav className="flex justify-between px-4 py-2 text-lg">
       <div>
         <Link href={status === "authenticated" ? "/dashboard" : "/"}>
-          <a className="-mx-2 rounded-md px-2 py-0.5 duration-150 hover:bg-gray-200">
+          <a className="rounded-md px-2 py-0.5 duration-150 hover:bg-gray-200">
             🐧 Penguin
           </a>
         </Link>
@@ -22,7 +22,7 @@ const Navbar = ({
                 {" "}
                 /{" "}
                 <Link href={crumb.link}>
-                  <a className="-mx-2 rounded-md px-2 py-0.5 duration-150 hover:bg-gray-200">
+                  <a className="rounded-md px-2 py-0.5 duration-150 hover:underline">
                     {crumb.text}
                   </a>
                 </Link>
