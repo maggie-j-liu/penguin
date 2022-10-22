@@ -56,14 +56,10 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
         </p>
 
         <div className="my-4 space-y-1">
-          <div className="flex items-center space-x-1">
-            <h2 className="font-black">Quicklinks</h2>
-            <HiExternalLink size={25} />
-          </div>
           <div className="space-y-2">
             <div>
               <a href={`/event/${event.id}/register`}>
-                <p className="rounded-md border-4 border-black bg-black px-4 py-2 text-sm font-black text-white transition ease-in-out hover:bg-white hover:text-black">
+                <p className="rounded-md border-2 border-black bg-black px-4 py-2 text-sm font-black text-white transition ease-in-out hover:bg-white hover:text-black">
                   Registration Form Link
                 </p>
               </a>
@@ -71,7 +67,7 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
 
             <div>
               <a href={`/event/${event.id}/send/email`}>
-                <p className="rounded-md border-4 border-black bg-black px-4 py-2 text-sm font-black text-white transition ease-in-out hover:bg-white hover:text-black">
+                <p className="rounded-md border-2 border-black bg-black px-4 py-2 text-sm font-black text-white transition ease-in-out hover:bg-white hover:text-black">
                   Mass Email Sending Tool
                 </p>
               </a>

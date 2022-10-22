@@ -78,25 +78,32 @@ const CreateParticipantForm = ({ event }: { event: any }) => {
             <div className="w-full space-y-2">
               <div className="flex space-x-3">
                 <div className="w-1/2">
-                  <Field
-                    type="text"
-                    name="firstName"
-                    className="w-full rounded-md border-4 border-black px-4 py-2 font-black"
-                    placeholder="First Name"
-                  />
+                  <label>
+                    First Name<span className="text-red-500">*</span>
+                    <Field
+                      type="text"
+                      name="firstName"
+                      className="w-full rounded-md border-2 border-black px-4 py-2 font-black"
+                      placeholder="Prophet"
+                    />
+                  </label>
+
                   <ErrorMessage
                     name="firstName"
                     component="p"
-                    className="text-red-500"
+                    className="text-red-400"
                   />
                 </div>
                 <div className="w-1/2">
-                  <Field
-                    type="text"
-                    name="lastName"
-                    className="w-full rounded-md border-4 border-black px-4 py-2 font-black"
-                    placeholder="Last Name"
-                  />
+                  <label>
+                    Last Name<span className="text-red-400">*</span>
+                    <Field
+                      type="text"
+                      name="lastName"
+                      className="w-full rounded-md border-2 border-black px-4 py-2 font-black"
+                      placeholder="Orpheus"
+                    />
+                  </label>
                   <ErrorMessage
                     name="lastName"
                     component="p"
@@ -105,12 +112,15 @@ const CreateParticipantForm = ({ event }: { event: any }) => {
                 </div>
               </div>
               <div>
-                <Field
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  className="w-full rounded-md border-4 border-black px-4 py-2 font-black"
-                />
+                <label>
+                  Email<span className="text-red-400">*</span>
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="prophet@orpheus.hack"
+                    className="w-full rounded-md border-2 border-black px-4 py-2 font-black"
+                  />
+                </label>
                 <ErrorMessage
                   name="email"
                   component="p"
@@ -118,12 +128,15 @@ const CreateParticipantForm = ({ event }: { event: any }) => {
                 />
               </div>
               <div>
-                <Field
-                  type="number"
-                  name="age"
-                  placeholder="Enter your age"
-                  className="w-full rounded-md border-4 border-black px-4 py-2 font-black"
-                />
+                <label>
+                  Age<span className="text-red-400">*</span>
+                  <Field
+                    type="number"
+                    name="age"
+                    placeholder="15"
+                    className="w-full rounded-md border-2 border-black px-4 py-2 font-black"
+                  />
+                </label>
                 <ErrorMessage
                   name="age"
                   component="p"
@@ -147,7 +160,7 @@ const CreateParticipantForm = ({ event }: { event: any }) => {
 
 const CreateParticipant = ({ event }: { event: any }) => {
   return (
-    <div className="space-y-4 p-8">
+    <div className="space-y-4 px-4 py-12">
       <CreateParticipantForm event={event} />
     </div>
   );
