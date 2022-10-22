@@ -6,6 +6,7 @@ import { authOptions } from "../../api/auth/[...nextauth]";
 import prisma from "../../../lib/prisma";
 import { formatDate } from "../../../lib/formatDate";
 import { useState } from "react";
+import { HiExternalLink } from "react-icons/hi";
 
 type EventWithParticipants = Event & { participants: ParticipantType[] };
 const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
@@ -53,6 +54,31 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
         <p className="text-center text-2xl font-semibold text-gray-400">
           {formatDate(event.date)}
         </p>
+
+        <div className="my-4 space-y-1">
+          <div className="flex items-center space-x-1">
+            <h2 className="font-black">Quicklinks</h2>
+            <HiExternalLink size={25} />
+          </div>
+          <div className="space-y-2">
+            <div>
+              <a href={`/event/${event.id}/register`}>
+                <p className="rounded-md border-4 border-black bg-black px-4 py-2 text-sm font-black text-white transition ease-in-out hover:bg-white hover:text-black">
+                  Registration Form Link
+                </p>
+              </a>
+            </div>
+
+            <div>
+              <a href={`/event/${event.id}/send/email`}>
+                <p className="rounded-md border-4 border-black bg-black px-4 py-2 text-sm font-black text-white transition ease-in-out hover:bg-white hover:text-black">
+                  Mass Email Sending Tool
+                </p>
+              </a>
+            </div>
+          </div>
+        </div>
+
         <section>
           <h2 className="text-2xl font-medium">
             {numRegistrations} Registration{numRegistrations === 1 ? "" : "s"} /{" "}
