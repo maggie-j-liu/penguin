@@ -2,14 +2,24 @@ import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import prisma from "../lib/prisma";
+import PageLayout from "../components/PageLayout";
+import type { Event as EventType } from "@prisma/client";
+import Event from "../components/Event";
 
-const Dashboard = () => {
+const Dashboard = ({ events }: { events: EventType[] }) => {
   return (
-    <main>
-      <section>
-        <h1>Dashboard</h1>
-      </section>
-    </main>
+    <PageLayout>
+      <div className="mx-auto max-w-5xl">
+        <h1 className="mx-auto w-fit text-center text-4xl font-bold">
+          Dashboard
+        </h1>
+        <div className="grid grid-cols-4">
+          {events.map((event) => (
+            <Event key={event.id} event={event} />
+          ))}
+        </div>
+      </div>
+    </PageLayout>
   );
 };
 
