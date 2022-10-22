@@ -70,4 +70,7 @@ model Participant {
   age Int
   event Event @relation(fields: [eventId], references: [id])
   eventId String
+  checkedIn Boolean @default(false)
+  waiverSigned Boolean @default(false)
+
 }
