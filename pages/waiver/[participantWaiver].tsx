@@ -1,6 +1,7 @@
 import { Event, Participant } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
+import PageLayout from "../../components/PageLayout";
 import prisma from "../../lib/prisma";
 
 const WaiverPage = ({
@@ -12,13 +13,15 @@ const WaiverPage = ({
   const [done, setDone] = useState(false);
   if (!done) {
     return (
-      <div>
+      <PageLayout noNavbar>
         <h1 className="text-center text-5xl font-bold">
           Sign {event.name} Waiver
         </h1>
-        <p>
+        <p className="mt-2 text-center text-xl">
           Print, sign, and scan the waiver at{" "}
-          <a href={event.waiverLink}>{event.waiverLink}</a>
+          <a className="underline" href={event.waiverLink}>
+            {event.waiverLink}
+          </a>
         </p>
         <input
           name="image"
@@ -49,7 +52,7 @@ const WaiverPage = ({
         {uploadingImage ? (
           <p className="dark:text-gray-300">Uploading image(s)...</p>
         ) : null}
-      </div>
+      </PageLayout>
     );
   }
   return (
