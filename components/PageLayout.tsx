@@ -4,13 +4,15 @@ import Navbar from "./Navbar";
 const PageLayout = ({
   children,
   crumbs = [],
+  noNavbar = false,
 }: {
   children: ReactNode;
   crumbs?: { text: string; link: string }[];
+  noNavbar?: boolean;
 }) => {
   return (
     <>
-      <Navbar crumbs={crumbs} />
+      {noNavbar ? null : <Navbar crumbs={crumbs} />}
       <div className="px-4 py-6">{children}</div>
     </>
   );

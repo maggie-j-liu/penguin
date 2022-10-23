@@ -63,7 +63,7 @@ model Event {
   date         DateTime
   name         String
   userId       String
-  waiverLink String?
+  waiverLink   String
 }
 
 model Participant {

@@ -41,17 +41,15 @@ export default async function handler(
       sendEmail(
         participant.email,
         `Sign your waivers for ${event?.name}`,
-        `
-        Thank you for registering for ${event?.name}!
+        `Thank you for registering for ${event?.name}!
 
-        Before you're ready for ${event?.name}, we need you to sign a couple of waivers and documents.
+Before you're ready for ${event?.name}, we need you to sign a couple of waivers and documents.
 
-        Please print out, fill, and scan the documents provided below:
+Please print out, fill, and scan the documents provided below:
 
-        - ${event?.waiverLink}
+- ${event?.waiverLink}
 
-        After you are done, go to https://penguinapp.vercel.app/waiver/${participant.waiverId}
-      `
+After you are done, go to https://penguinapp.vercel.app/waiver/${participant.waiverId}`
       );
 
       res.send("Success");
