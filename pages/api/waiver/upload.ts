@@ -47,8 +47,11 @@ export default async function handler(
     });
   });
 
-  let { files } = data as any;
-  const { waiverId } = req.body;
+  let { files, fields } = data as any;
+
+  const waiverId = fields.waiverId;
+
+  console.log(waiverId);
 
   let media: string[] = [];
 
@@ -73,15 +76,17 @@ export default async function handler(
 
   const participant = await prisma.participant.update({
     where: {
-      id: session.user.id,
       waiverId: waiverId,
     },
 
     data: {
       waiverImages: media,
+      waiverSigned: true,
     },
   });
   res.json(participant);
 
-  // res.end();
+  // res.json("hi");
+
+  // //res.end();
 }

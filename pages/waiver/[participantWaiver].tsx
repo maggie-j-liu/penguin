@@ -37,7 +37,8 @@ const WaiverPage = ({
               Array.from(e.target.files).forEach((file, i) => {
                 fd.append(file.name, file);
               });
-              const media = await fetch("/api/upload-files", {
+              fd.append("waiverId", participant.waiverId);
+              const media = await fetch("/api/waiver/upload", {
                 method: "POST",
                 body: fd,
               });
@@ -45,6 +46,7 @@ const WaiverPage = ({
               // setFiles((f) => [...f, ...newFiles]);
               e.target.value = "";
               setUploadingImage(false);
+              setDone(true);
               // console.log(e.target.files);
             }
           }}
@@ -56,8 +58,11 @@ const WaiverPage = ({
     );
   }
   return (
-    <div>
-      <h1 className="text-2xl font-black">Waiver uploaded!</h1>
+    <div className="space-y-2 text-center">
+      <h1 className="text-center text-4xl font-black">
+        Registration complete for {event.name}!
+      </h1>
+      <p>You may now close this page!</p>
     </div>
   );
 };
