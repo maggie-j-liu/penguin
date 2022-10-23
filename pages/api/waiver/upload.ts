@@ -4,6 +4,7 @@ import cloudinary from "cloudinary";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "../../../lib/prisma";
+import { WaiverStatus } from "@prisma/client";
 
 //set bodyparser
 export const config = {
@@ -81,7 +82,7 @@ export default async function handler(
 
     data: {
       waiverImages: media,
-      waiverSigned: true,
+      waiverStatus: WaiverStatus.PENDING,
     },
   });
   res.json(participant);

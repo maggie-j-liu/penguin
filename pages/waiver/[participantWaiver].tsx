@@ -1,4 +1,4 @@
-import { Event, Participant } from "@prisma/client";
+import { Event, Participant, WaiverStatus } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { useState } from "react";
 import PageLayout from "../../components/PageLayout";
@@ -11,6 +11,38 @@ const WaiverPage = ({
 }) => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [done, setDone] = useState(false);
+
+  if (
+    participant.waiverStatus === WaiverStatus.APPROVED ||
+    participant.waiverStatus === WaiverStatus.PENDING
+  ) {
+    return (
+      <div className="space-y-6 py-12 px-6 text-center">
+        <div className="space-y-1 text-center">
+          <h1 className="text-center text-4xl font-black">
+            Waiver for {event.name} already signed.
+          </h1>
+          <p>
+            {participant.waiverStatus === WaiverStatus.APPROVED
+              ? "The organizers have reviewed your waiver submission and have approved it!"
+              : "Waiver is pending approval from the organizers."}
+          </p>
+        </div>
+
+        <div className="flex justify-center">
+          <div>
+            <p className="text-left font-semibold">Uploaded file(s):</p>
+            <div className="flex max-w-2xl space-x-3 overflow-x-scroll">
+              {participant.waiverImages.map((waiver) => {
+                return <img key={waiver} src={waiver} className="max-w-md" />;
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!done) {
     return (
       <PageLayout noNavbar>
@@ -58,7 +90,7 @@ const WaiverPage = ({
     );
   }
   return (
-    <div className="space-y-2 text-center">
+    <div className="space-y-2 py-12 text-center">
       <h1 className="text-center text-4xl font-black">
         Registration complete for {event.name}!
       </h1>
