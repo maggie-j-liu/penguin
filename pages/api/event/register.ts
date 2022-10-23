@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
+import { sendEmail } from "../../../util/sendEmail";
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,6 +31,28 @@ export default async function handler(
           eventId: eventId,
         },
       });
+
+      const event = await prisma.event.findUnique({
+        where: {
+          id: eventId,
+        },
+      });
+
+      sendEmail(
+        participant.email,
+        `Sign your waivers for ${event?.name}`,
+        `
+        Thank you for registering for ${event?.name}!
+
+        Before you're ready for ${event?.name}, we need you to sign a couple of waivers and documents.
+
+        Please print out, fill, and scan the documents provided below:
+
+        - ${event?.waiverLink}
+
+        After you are done, go to https://penguinapp.vercel.app/waiver/${participant.waiverId}
+      `
+      );
 
       res.send("Success");
     } else {
