@@ -33,11 +33,6 @@ export default async function handler(
     res.status(405).send("Method not allowed");
     return;
   }
-  const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session || !session.user) {
-    res.status(401).send("Unauthorized");
-    return;
-  }
 
   let data = await new Promise((resolve, reject) => {
     const form = formidable();
