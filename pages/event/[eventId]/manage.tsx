@@ -1,4 +1,8 @@
-import { Event, Participant as ParticipantType } from "@prisma/client";
+import {
+  Event,
+  Participant as ParticipantType,
+  WaiverStatus,
+} from "@prisma/client";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import PageLayout from "../../../components/PageLayout";
@@ -7,12 +11,15 @@ import prisma from "../../../lib/prisma";
 import { formatDate } from "../../../lib/formatDate";
 import { useState } from "react";
 import { HiExternalLink } from "react-icons/hi";
+import WaiverModal from "../../../components/WaiverModal";
 
 type EventWithParticipants = Event & { participants: ParticipantType[] };
 const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
   const numRegistrations = event.participants.length;
   const [participants, setParticipants] = useState(event.participants);
   const [search, setSearch] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [openedParticipant, setOpenedParticipant] = useState<ParticipantType>();
   const checkedIn = participants.filter((p) => p.checkedIn).length;
   const changeCheckIn = async (id: string, checkedIn: boolean) => {
     console.log("changeCheckIn", participants);
@@ -37,6 +44,31 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
         checkedIn,
       }),
     });
+  };
+
+  const changeWaiverStatus = (participantId: string) => {
+    return async (waiverStatus: WaiverStatus) => {
+      const newParticipants = participants.map((participant) => {
+        if (participant.id === participantId) {
+          return {
+            ...participant,
+            waiverStatus,
+          };
+        }
+        return participant;
+      });
+      setParticipants(newParticipants);
+      await fetch("/api/waiver/review", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          participantId,
+          waiverStatus,
+        }),
+      });
+    };
   };
   const filteredParticipants = participants.filter((p) => {
     if (search.trim().length === 0) return true;
@@ -103,7 +135,7 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
                 <th>Name</th>
                 <th>Age</th>
                 <th>Email</th>
-                <th>Waiver Signed</th>
+                <th>Waiver Status</th>
                 <th>Checked In</th>
               </tr>
             </thead>
@@ -118,7 +150,27 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
                   </td>
                   <td>{participant.age}</td>
                   <td>{participant.email}</td>
-                  <td>{participant.waiverSigned ? "✅ Yes" : "❌ No"}</td>
+                  <td>
+                    {participant.waiverStatus === WaiverStatus.NOT_SIGNED
+                      ? "❌ Not Approved "
+                      : participant.waiverStatus === WaiverStatus.PENDING
+                      ? "⌛ Pending "
+                      : "✅ Approved "}
+
+                    {participant.waiverImages.length !== 0 ? (
+                      <button
+                        type="button"
+                        className="rounded border-2 border-black bg-black px-2 text-white hover:bg-white hover:text-black"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setOpenedParticipant(participant);
+                          setModalOpen(true);
+                        }}
+                      >
+                        View Waiver
+                      </button>
+                    ) : null}
+                  </td>
                   <td>
                     {participant.checkedIn ? "✅ " : "❌ "}
                     <button
@@ -133,7 +185,7 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
                       }}
                       className="rounded border-2 border-black bg-black px-2 text-white hover:bg-white hover:text-black"
                     >
-                      {participant.checkedIn ? "remove" : "check in"}
+                      {participant.checkedIn ? "Remove" : "Check In"}
                     </button>
                   </td>
                 </tr>
@@ -142,6 +194,15 @@ const EventDashboard = ({ event }: { event: EventWithParticipants }) => {
           </table>
         </section>
       </div>
+
+      <WaiverModal
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+        }}
+        imageUrl={openedParticipant?.waiverImages[0] ?? ""}
+        changeWaiverStatus={changeWaiverStatus(openedParticipant?.id ?? "")}
+      />
     </PageLayout>
   );
 };
