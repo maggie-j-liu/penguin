@@ -67,17 +67,23 @@ model Event {
 }
 
 model Participant {
-  id           String  @id @default(cuid())
+  id           String       @id @default(cuid())
   firstName    String
   lastName     String
   email        String
   age          Int
-  event        Event   @relation(fields: [eventId], references: [id])
+  event        Event        @relation(fields: [eventId], references: [id])
   eventId      String
-  checkedIn    Boolean @default(false)
-  waiverSigned Boolean @default(false)
-  waiverId     String  @unique @default(cuid())
+  checkedIn    Boolean      @default(false)
+  waiverStatus WaiverStatus @default(NOT_SIGNED)
+  waiverId     String       @unique @default(cuid())
   waiverImages String[]
 
   @@unique([email, eventId])
+}
+
+enum WaiverStatus {
+  NOT_SIGNED
+  PENDING
+  APPROVED
 }
