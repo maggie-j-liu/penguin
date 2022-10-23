@@ -1,6 +1,6 @@
 import { Event, Participant } from "@prisma/client";
 import { GetServerSideProps } from "next";
-import PageLayout from "../../components/PageLayout";
+import { useState } from "react";
 import prisma from "../../lib/prisma";
 
 const WaiverPage = ({
@@ -8,18 +8,54 @@ const WaiverPage = ({
 }: {
   participant: Participant & { event: Event };
 }) => {
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [done, setDone] = useState(false);
+  if (!done) {
+    return (
+      <div>
+        <h1 className="text-center text-5xl font-bold">
+          Sign {event.name} Waiver
+        </h1>
+        <p>
+          Print, sign, and scan the waiver at{" "}
+          <a href={event.waiverLink}>{event.waiverLink}</a>
+        </p>
+        <input
+          name="image"
+          type="file"
+          className="mx-auto block w-full"
+          // accept="image/*, video*/"
+          accept="image/png, image/jpeg, image/jpg"
+          multiple
+          onChange={async (e) => {
+            if (e.target.files) {
+              setUploadingImage(true);
+              const fd = new FormData();
+              Array.from(e.target.files).forEach((file, i) => {
+                fd.append(file.name, file);
+              });
+              const media = await fetch("/api/upload-files", {
+                method: "POST",
+                body: fd,
+              });
+              const newFiles = await media.json();
+              // setFiles((f) => [...f, ...newFiles]);
+              e.target.value = "";
+              setUploadingImage(false);
+              // console.log(e.target.files);
+            }
+          }}
+        />
+        {uploadingImage ? (
+          <p className="dark:text-gray-300">Uploading image(s)...</p>
+        ) : null}
+      </div>
+    );
+  }
   return (
-    <PageLayout noNavbar>
-      <h1 className="text-center text-5xl font-bold">
-        Sign {event.name} Waiver
-      </h1>
-      <p className="mt-2 text-center text-lg">
-        Print, sign, and scan the waiver at{" "}
-        <a className="underline" href={event.waiverLink}>
-          {event.waiverLink}
-        </a>
-      </p>
-    </PageLayout>
+    <div>
+      <h1 className="text-2xl font-black">Waiver uploaded!</h1>
+    </div>
   );
 };
 
