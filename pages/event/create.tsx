@@ -19,7 +19,7 @@ const CreateEventForm = () => {
   const router = useRouter();
   return (
     <Formik
-      initialValues={{ name: "", date: "" }}
+      initialValues={{ name: "", date: "", waiverLink: "" }}
       validate={(values) => {
         const errors: any = {};
 
@@ -27,6 +27,8 @@ const CreateEventForm = () => {
           errors.name = "Required";
         } else if (!values.date) {
           errors.date = "Invalid date";
+        } else if (!values.waiverLink) {
+          errors.waiverLink = "Required";
         }
 
         return errors;
@@ -42,6 +44,7 @@ const CreateEventForm = () => {
             body: JSON.stringify({
               name: values.name,
               date: new Date(values.date),
+              waiverLink: values.waiverLink,
             }),
           }).then((res) => res.json());
           router.push(`/event/${res.event.id}/manage`);
@@ -82,6 +85,22 @@ const CreateEventForm = () => {
               </label>
               <ErrorMessage
                 name="date"
+                component="div"
+                className="text-red-500"
+              />
+            </div>
+            <div>
+              <label>
+                <span>Waiver Link</span>
+                <span className="text-red-400">*</span>
+                <Field
+                  type="url"
+                  name="waiverLink"
+                  className="w-full rounded-md border-2 border-black px-4 py-2 font-black"
+                />
+              </label>
+              <ErrorMessage
+                name="waiverLink"
                 component="div"
                 className="text-red-500"
               />

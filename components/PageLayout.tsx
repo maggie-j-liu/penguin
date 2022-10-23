@@ -13,7 +13,7 @@ const PageLayout = ({
   return (
     <>
       {noNavbar ? null : <Navbar crumbs={crumbs} />}
-      <div className="px-4 py-6">{children}</div>
+      <div className="px-4 py-12">{children}</div>
     </>
   );
 };

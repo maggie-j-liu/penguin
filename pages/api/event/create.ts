@@ -11,7 +11,7 @@ export default async function handler(
     if (req.method === "POST") {
       // Process a POST request
 
-      if (!req.body.name || !req.body.date) {
+      if (!req.body.name || !req.body.date || !req.body.waiverLink) {
         res.status(400).send("Insufficient fields sent");
         res.end();
         return;
@@ -23,13 +23,14 @@ export default async function handler(
         return;
       }
 
-      const { name, date } = req.body;
+      const { name, date, waiverLink } = req.body;
 
       const event = await prisma.event.create({
         data: {
           name: name,
           date: date,
           userId: session.user.id,
+          waiverLink,
         },
       });
 

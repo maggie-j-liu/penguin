@@ -13,9 +13,11 @@ const WaiverPage = ({
       <h1 className="text-center text-5xl font-bold">
         Sign {event.name} Waiver
       </h1>
-      <p>
+      <p className="mt-2 text-center text-lg">
         Print, sign, and scan the waiver at{" "}
-        <a href={event.waiverLink}>{event.waiverLink}</a>
+        <a className="underline" href={event.waiverLink}>
+          {event.waiverLink}
+        </a>
       </p>
     </PageLayout>
   );
