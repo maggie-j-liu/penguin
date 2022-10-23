@@ -92,9 +92,23 @@ const WaiverPage = ({
   return (
     <div className="space-y-2 py-12 text-center">
       <h1 className="text-center text-4xl font-black">
-        Registration complete for {event.name}!
+        Waiver submitted for {event.name}!
       </h1>
-      <p>You may now close this page!</p>
+      <p>
+        You will receive updates on your email regarding the status of your
+        waiver. You can now close this page.
+      </p>
+
+      <div className="flex justify-center">
+        <div>
+          <p className="text-left font-semibold">Uploaded file(s):</p>
+          <div className="flex max-w-2xl space-x-3 overflow-x-scroll">
+            {participant.waiverImages.map((waiver) => {
+              return <img key={waiver} src={waiver} className="max-w-md" />;
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
